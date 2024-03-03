@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Now</title>
+    <style>
+        /* Your CSS styles remain unchanged */
+    </style>
+</head>
+<body>
+
+    <div id="voting-container">
+        <h1>Vote for Your Favorite Option</h1>
+
+        <form id="voting-form">
+            <label>
+                <input type="radio" name="vote" value="option1">
+                Option 1
+            </label>
+
+            <label>
+                <input type="radio" name="vote" value="option2">
+                Option 2
+            </label>
+
+            <label>
+                <input type="radio" name="vote" value="option3">
+                Option 3
+            </label>
+
+            <input type="submit" value="Submit Vote">
+        </form>
+
+        <div id="vote-results">
+            <h2>Vote Results</h2>
+            <p id="option1-votes">Option 1: 0 votes</p>
+            <p id="option2-votes">Option 2: 0 votes</p>
+            <p id="option3-votes">Option 3: 0 votes</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if there are stored votes and update the display
+            updateVoteDisplay();
+
+            // Add event listener for form submission
+            document.getElementById("voting-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                // Check if the user has already voted
+                if (!hasVoted()) {
+                    // Get the selected vote option
+                    const selectedOption = document.querySelector('input[name="vote"]:checked');
+
+                    if (selectedOption) {
+                        // Increment the vote count for the selected option
+                        const optionKey = selectedOption.value + "-votes";
+                        const currentVotes = parseInt(localStorage.getItem(optionKey)) || 0;
+                        localStorage.setItem(optionKey, currentVotes + 1);
+
+                        // Update the display
+                        updateVoteDisplay();
+
+                        // Disable the form and hide voting options
+                        disableForm();
+                    }
+                }
+            });
+
+            // Function to update the vote display
+            function updateVoteDisplay() {
+                document.getElementById("option1-votes").textContent = `Option 1: ${localStorage.getItem("option1-votes") || 0} votes`;
+                document.getElementById("option2-votes").textContent = `Option 2: ${localStorage.getItem("option2-votes") || 0} votes`;
+                document.getElementById("option3-votes").textContent = `Option 3: ${localStorage.getItem("option3-votes") || 0} votes`;
+            }
+
+            // Function to check if the user has voted
+            function hasVoted() {
+                return localStorage.getItem("hasVoted") === "true";
+            }
+
+            // Function to disable the form and hide voting options
+            function disableForm() {
+                document.getElementById("voting-form").style.display = "none";
+                document.getElementById("vote-results").style.display = "block";
+                localStorage.setItem("hasVoted", "true");
+            }
+        });
+    </script>
+
+</body>
+</html>
